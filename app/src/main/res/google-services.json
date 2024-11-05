@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "35757558235",
+    "project_id": "e-class-record-2044e",
+    "storage_bucket": "e-class-record-2044e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35757558235:android:c571792c2a7ac8dc513ffe",
+        "android_client_info": {
+          "package_name": "com.example.itelective3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35757558235-ld7hkmsr3ar7rkh95im3ef7hm5v375og.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.itelective3",
+            "certificate_hash": "a7f03426521a73c8202ff0c7c2e3a36da614f483"
+          }
+        },
+        {
+          "client_id": "35757558235-bbdfic1h9m4rvf7p9f0rb2fb9bb9rmhr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqwhQP5VWl26cxkrq3o-aQmaSBK-6068M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35757558235-bbdfic1h9m4rvf7p9f0rb2fb9bb9rmhr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

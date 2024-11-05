@@ -11,8 +11,10 @@ class LandingPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing_page)
 
+        // Use ug handler para naay 3 seconds na delay before mag transition sa Login
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this@LandingPage, MainActivity::class.java)
+            //intent to start sa login
+            val intent = Intent(this@LandingPage, Login::class.java)
             startActivity(intent)
             finish()
         }, 3000)

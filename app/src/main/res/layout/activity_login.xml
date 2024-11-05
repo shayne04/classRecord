@@ -2,12 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/light_blue"
     android:padding="10dp"
-    tools:context=".SignUp">
+    android:gravity="center"
+    tools:context=".Login">
 
     <ImageView
         android:id="@+id/logo_image"
@@ -16,22 +16,21 @@
         android:src="@drawable/digiclass_logo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linear1"
+        android:id="@+id/linear2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/logo_image">
 
-
         <EditText
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:hint="Enter Full Name"
+            android:hint="Username/Email"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:drawableLeft="@drawable/user_vector"
@@ -39,27 +38,13 @@
             android:backgroundTint="@color/white"
             android:padding="15dp"
             android:inputType="text"
-            android:id="@+id/fullNameInput"/>
+            android:id="@+id/usernameInput"/>
 
         <EditText
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:layout_marginTop="15dp"
-            android:hint="Enter Email Address"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:drawableLeft="@drawable/email_vector"
-            android:background="@drawable/rounded_corner"
-            android:backgroundTint="@color/white"
-            android:padding="15dp"
-            android:inputType="textEmailAddress"
-            android:id="@+id/enterEmailInput"/>
-
-        <EditText
-            android:layout_width="350dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:hint="Enter Password"
+            android:hint="Password"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:drawableLeft="@drawable/password_vector"
@@ -67,35 +52,63 @@
             android:backgroundTint="@color/white"
             android:padding="15dp"
             android:inputType="textPassword"
-            android:id="@+id/enterPasswordInput"/>
+            android:id="@+id/passwordInput"
+            app:passwordToggleEnabled="true"/>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/signUpBtn"
+            android:id="@+id/forgotPass"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="15dp"
+            android:background="@android:color/transparent"
+            android:text="Forgot Password?"
+            android:textAlignment="textStart"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:padding="8dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/loginButton"
             android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/layout"
-            android:text="Sign Up"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:text="Login"
             android:fontFamily="sans-serif"
             android:textStyle="bold"
-            android:layout_gravity="center"/>
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="- Or Sign In with -"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+
+        <ImageView
+            android:id="@+id/googlebtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/google_logo" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/login_link"
+            android:id="@+id/signUpButton"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:background="@android:color/transparent"
-            android:text="Already have an account? Login"
+            android:text="Don’t have an account? Sign Up"
             android:fontFamily="sans-serif"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="15sp"/>
 
-
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

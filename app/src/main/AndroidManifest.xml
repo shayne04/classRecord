@@ -19,7 +19,7 @@
             android:name=".Homepage"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Login"
             android:exported="false" />
         <activity
             android:name=".LandingPage"
