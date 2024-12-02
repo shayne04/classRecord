@@ -5,39 +5,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="16dp"
-    tools:context=".ProfileFragment">
+    tools:context=".TeacherProfileFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginBottom="450dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/round_corner">
 
 
     <TextView
         android:id="@+id/profileHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Profile"
-        android:textSize="24sp"
+        android:text="My Profile"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="@color/blue4"
+        android:textColor="@color/blue1"
         android:layout_gravity="center_horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginTop="20dp"/>
 
-    <!-- Display Name -->
+        <ImageView
+            android:id="@+id/profilePicture"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_account"
+            android:contentDescription="Profile Picture"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circular_border"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/changeProfilePictureButton"
+            android:layout_width="190dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:text="Change Profile Picture"
+            android:fontFamily="sans-serif"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/layout"
+            android:layout_marginBottom="24dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="150dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/linear2"
+        app:layout_constraintBottom_toBottomOf="parent">
+
     <TextView
         android:id="@+id/profileNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name:"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/profileHeader"
@@ -47,18 +82,20 @@
         android:id="@+id/profileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="24sp"
+       android:textStyle="bold"
+        android:textColor="@color/blue3"
         app:layout_constraintTop_toTopOf="@id/profileNameLabel"
         app:layout_constraintStart_toEndOf="@id/profileNameLabel"
         android:layout_marginStart="8dp"/>
 
-    <!-- Email -->
+
     <TextView
         android:id="@+id/profileEmailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Email:"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/profileNameLabel"
@@ -69,7 +106,9 @@
         android:id="@+id/profileEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/blue3"
         app:layout_constraintTop_toTopOf="@id/profileEmailLabel"
         app:layout_constraintStart_toEndOf="@id/profileEmailLabel"
         android:layout_marginStart="8dp"/>
@@ -91,7 +130,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"/>
 
-
-
     </androidx.appcompat.widget.LinearLayoutCompat>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
