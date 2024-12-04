@@ -3,7 +3,6 @@ package com.example.itelective3
 import android.content.Context
 import android.os.Bundle
 import android.content.Intent
-import android.media.audiofx.BassBoost
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -19,7 +18,6 @@ class LandingPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing_page)
 
-        // Check network availability
         if (!isNetworkAvailable(this)) {
             showNoInternetDialog()
         } else {
@@ -35,7 +33,7 @@ class LandingPage : AppCompatActivity() {
                 startActivity(Intent(this, Login::class.java))
             }
             finish()
-        }, 3000) // Splash screen delay of 3 seconds
+        }, 3000)
     }
     private fun isNetworkAvailable(context: Context?): Boolean {
         if (context == null) return false
@@ -64,7 +62,6 @@ class LandingPage : AppCompatActivity() {
         builder.setTitle("Internet Connectivity Required")
         builder.setMessage("Please turn on your Wi-Fi or data to use this app.")
         builder.setNegativeButton("Exit") { _, _ ->
-            // Exit the app
             finish()
         }
         val dialog = builder.create()

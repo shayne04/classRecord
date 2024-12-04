@@ -23,12 +23,12 @@ class ClassAdapter(
                     onDeleteClick(classObj)
                 }
             }
-            // Update button listener (add this part for updating)
+
             binding.updateClassButton.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val classObj = classList[position]
-                    onUpdateClass(classObj) // Trigger update callback
+                    onUpdateClass(classObj)
                 }
             }
         }

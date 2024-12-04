@@ -32,7 +32,7 @@ class Attendance : AppCompatActivity() {
     private lateinit var studentList: MutableList<Checking>
     private var selectedClassId: String? = null
     private var selectedDate: String? = null
-    private lateinit var teacherUid: String // Teacher's UID
+    private lateinit var teacherUid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,16 +50,13 @@ class Attendance : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        // Initialize RecyclerView
         studentList = mutableListOf()
         attendanceAdapter = AttendanceAdapter(studentList)
-        binding.recyclerViewStudents.layoutManager = LinearLayoutManager(this)
-        binding.recyclerViewStudents.adapter = attendanceAdapter
+        binding.recyclerAttendanceStudents.layoutManager = LinearLayoutManager(this)
+        binding.recyclerAttendanceStudents.adapter = attendanceAdapter
 
-        // Load Classes in Spinner
         loadClasses()
 
-        // Spinner class selection
         binding.spinnerClass.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 selectedClassId = parent?.getItemAtPosition(position).toString()
@@ -67,14 +64,12 @@ class Attendance : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Handle the case where no class is selected, if necessary
             }
         }
-        // Date Picker
+
         binding.attendanceDate.setOnClickListener { showDatePicker() }
 
-        // Save Attendance
-        binding.btnSaveAttendance.setOnClickListener { saveAttendance() }
+        binding.saveAttendanceButton.setOnClickListener { saveAttendance() }
 
         binding.btnBack.setOnClickListener {
             val intent = Intent(this, TeacherMain::class.java)
@@ -87,14 +82,14 @@ class Attendance : AppCompatActivity() {
         database.reference.child("Classes").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val classNames = mutableListOf<String>()
-                val classIdMap = mutableMapOf<String, String>() // To store class name and class ID
+                val classIdMap = mutableMapOf<String, String>()
 
                 for (classSnapshot in snapshot.children) {
                     val className = classSnapshot.child("className").getValue(String::class.java) ?: ""
                     val classId = classSnapshot.key ?: ""
                     if (className.isNotEmpty() && classId.isNotEmpty()) {
                         classNames.add(className)
-                        classIdMap[className] = classId // Store class name and corresponding class ID
+                        classIdMap[className] = classId
                     }
                 }
 
@@ -102,16 +97,14 @@ class Attendance : AppCompatActivity() {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 binding.spinnerClass.adapter = adapter
 
-                // When a class is selected, set the selected class ID
                 binding.spinnerClass.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         val selectedClassName = parent?.getItemAtPosition(position).toString()
-                        selectedClassId = classIdMap[selectedClassName] // Retrieve the class ID
+                        selectedClassId = classIdMap[selectedClassName]
                         loadStudentsForClass(selectedClassId!!)
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {
-                        // Handle the case where no class is selected, if necessary
                     }
                 }
             }
@@ -124,27 +117,23 @@ class Attendance : AppCompatActivity() {
 
 
     private fun loadStudentsForClass(classId: String) {
-        database.reference.child("Students").child(classId).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                studentList.clear()
-                for (studentSnapshot in snapshot.children) {
-                    val student = studentSnapshot.getValue(Checking::class.java)
-                    if (student != null) {
-                        studentList.add(student)
-                        // Log student details
-                        println("Student Loaded: ${student.fullName}")
-                    } else {
-                        println("Error: Student is null")
+        database.reference.child("Students").orderByChild("classId").equalTo(classId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    studentList.clear()
+                    for (studentSnapshot in snapshot.children) {
+                        val student = studentSnapshot.getValue(Checking::class.java)
+                        student?.let { studentList.add(it) }
                     }
+                    attendanceAdapter.notifyDataSetChanged()
                 }
-                attendanceAdapter.notifyDataSetChanged() // Update the adapter
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@Attendance, "Failed to load students.", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@Attendance, "Failed to load students.", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
+
 
 
 
@@ -155,7 +144,7 @@ class Attendance : AppCompatActivity() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            selectedDate = "$selectedMonth/${selectedDay + 1}/$selectedYear"
+            selectedDate = "${selectedMonth +1}/$selectedDay/$selectedYear"
             binding.attendanceDate.text = selectedDate
         }, year, month, day).show()
     }
@@ -170,7 +159,7 @@ class Attendance : AppCompatActivity() {
         for (student in studentList) {
             if (student.isChecked) {
                 val attendance = Attendance(
-                    uid = teacherUid, // Use teacher's UID
+                    uid = teacherUid,
                     attendanceId = UUID.randomUUID().toString(),
                     classId = selectedClassId,
                     studentId = student.uid,

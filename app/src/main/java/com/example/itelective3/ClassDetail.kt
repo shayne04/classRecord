@@ -90,33 +90,30 @@ class ClassDetail : AppCompatActivity() {
         builder.setTitle("Confirm Deletion")
         builder.setMessage("Are you sure you want to delete the selected students?")
 
-        // Set positive button
         builder.setPositiveButton("Delete") { dialog, _ ->
-            deleteSelectedStudents() // Call the method to delete students
+            deleteSelectedStudents()
             dialog.dismiss()
         }
-        // Set negative button
+
         builder.setNegativeButton("Cancel") { dialog, _ ->
             dialog.dismiss()
         }
 
-        // Show the dialog
         val alertDialog = builder.create()
         alertDialog.show()
     }
     private fun deleteSelectedStudents() {
         for (student in selectedStudents) {
-            val position = studentList.indexOf(student) // Find the index of the student
-            if (position != -1) { // Check if the student exists in the list
-                studentList.removeAt(position) // Remove the student from the list
+            val position = studentList.indexOf(student)
+            if (position != -1) {
+                studentList.removeAt(position)
                 student.studentId?.let { id ->
-                    database.child(id).removeValue() // Remove the student from Firebase
+                    database.child(id).removeValue()
                 }
-                studentAdapter.notifyItemRemoved(position) // Notify the adapter about the removal
+                studentAdapter.notifyItemRemoved(position)
             }
         }
 
-// Clear the selectedStudents set
         selectedStudents.clear()
         Toast.makeText(this, "Selected students removed successfully.", Toast.LENGTH_SHORT).show()
     }

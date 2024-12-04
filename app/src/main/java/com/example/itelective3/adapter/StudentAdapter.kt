@@ -19,10 +19,8 @@ class StudentAdapter(
             binding.studentId.text = student.studentId
             binding.studentName.text = student.studentName
 
-            // Update checkbox state based on selection
             binding.checkBoxSelectStudent.isChecked = selectedStudents.contains(student)
 
-            // Handle checkbox selection
             binding.checkBoxSelectStudent.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     selectedStudents.add(student)

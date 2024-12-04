@@ -1,7 +1,9 @@
 package com.example.itelective3.model
 
 data class Checking(
-    val uid: String? = null,
-    val fullName: String? = null, // Example property for student name
-    var isChecked: Boolean = false // Tracks attendance
+    var studentId: String? = null,
+    var studentName: String? = null,
+    var classId: String? = null,
+    var uid: String? = null,
+    var isChecked: Boolean = false
 )

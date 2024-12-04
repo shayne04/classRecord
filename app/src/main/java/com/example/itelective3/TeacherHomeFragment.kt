@@ -55,7 +55,7 @@ class TeacherHomeFragment : Fragment() {
         }, { classToDelete ->
             deleteClass(classToDelete)
         }, { classToUpdate ->
-            showUpdateClassDialog(classToUpdate)  // Trigger the update dialog
+            showUpdateClassDialog(classToUpdate)
         })
 
         binding.recyclerViewClasses.apply {
@@ -75,7 +75,11 @@ class TeacherHomeFragment : Fragment() {
             intent.putExtra("TEACHER_UID", teacherUid)
             startActivity(intent)
         }
-
+        binding.cardReport.setOnClickListener {
+            val intent = Intent(context, AttendanceReport::class.java)
+            intent.putExtra("TEACHER_UID", teacherUid)
+            startActivity(intent)
+        }
         loadClasses()
     }
     private fun navigateToClassDetail(selectedClass: Class) {
@@ -251,8 +255,8 @@ class TeacherHomeFragment : Fragment() {
         day: String,
         time: String
     ) {
-        // Ensure that originalClassID is not null before proceeding
-        val validClassID = originalClassID ?: classID // Fallback to the new classID if original is null
+
+        val validClassID = originalClassID ?: classID
 
         val classObj = Class(
             uid = teacherUid,
