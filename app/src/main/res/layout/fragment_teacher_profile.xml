@@ -17,7 +17,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/round_corner">
 
-
     <TextView
         android:id="@+id/profileHeader"
         android:layout_width="wrap_content"
@@ -71,6 +70,7 @@
         android:id="@+id/profileNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="Name:"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -113,12 +113,28 @@
         app:layout_constraintStart_toEndOf="@id/profileEmailLabel"
         android:layout_marginStart="8dp"/>
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/changePasswordButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Change Password"
+            android:fontFamily="sans-serif"
+            android:background="@drawable/layout"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
-    <androidx.appcompat.widget.AppCompatButton
+
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logoutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:text="Logout"
         android:fontFamily="sans-serif"
         android:background="@drawable/layout"
@@ -128,7 +144,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

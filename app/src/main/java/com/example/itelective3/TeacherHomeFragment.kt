@@ -1,6 +1,7 @@
 package com.example.itelective3
 
 
+import android.R
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -8,15 +9,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itelective3.adapter.ClassAdapter
 import com.example.itelective3.databinding.DialogAddClassBinding
-import com.example.itelective3.databinding.DialogAddStudentBinding
 import com.example.itelective3.databinding.DialogUpdateClassBinding
 import com.example.itelective3.databinding.FragmentTeacherHomeBinding
 import com.example.itelective3.model.Class
-import com.example.itelective3.model.Student
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -36,10 +36,12 @@ class TeacherHomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentTeacherHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -64,37 +66,71 @@ class TeacherHomeFragment : Fragment() {
         }
 
         binding.cardAddClass.setOnClickListener {
-           showAddClassDialog()
+            showAddClassDialog()
         }
 
-        binding.cardAddStudents.setOnClickListener {
-            showAddStudentDialog()
-        }
-        binding.cardAddAttendance.setOnClickListener {
-            val intent = Intent(requireContext(), Attendance::class.java)
-            intent.putExtra("TEACHER_UID", teacherUid)
-            startActivity(intent)
-        }
-        binding.cardReport.setOnClickListener {
-            val intent = Intent(context, AttendanceReport::class.java)
-            intent.putExtra("TEACHER_UID", teacherUid)
-            startActivity(intent)
-        }
         loadClasses()
+        loadTotalClassesCount()
+        loadTotalStudentsCount()
     }
+
+    private fun loadTotalClassesCount() {
+        val database = FirebaseDatabase.getInstance().getReference("Classes")
+        database.orderByChild("uid").equalTo(teacherUid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val totalClasses = snapshot.childrenCount
+                    binding.totalClasses.text = "Classes: $totalClasses"
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to load class count.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+    }
+
+    private fun loadTotalStudentsCount() {
+        val database = FirebaseDatabase.getInstance().getReference("Students")
+        database.orderByChild("uid").equalTo(teacherUid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val totalStudents = snapshot.childrenCount
+                    binding.totalStudents.text = "Students: $totalStudents"
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to load student count.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+    }
+
     private fun navigateToClassDetail(selectedClass: Class) {
-        val intent = Intent(requireContext(), ClassDetail::class.java).apply {
-            putExtra("classId", selectedClass.classID)
-            putExtra("className", selectedClass.className)
-            putExtra("subjectCode", selectedClass.subjectCode)
-            putExtra("schedule", "${selectedClass.day}, ${selectedClass.time}")
+        val teacherUid = FirebaseAuth.getInstance().currentUser?.uid
+        if (teacherUid != null) {
+            val intent = Intent(requireContext(), ClassDetail::class.java).apply {
+                putExtra("classId", selectedClass.classID)
+                putExtra("className", selectedClass.className)
+                putExtra("subjectCode", selectedClass.subjectCode)
+                putExtra("schedule", "${selectedClass.day}, ${selectedClass.time}")
+                putExtra("teacherUid", teacherUid)
+            }
+            startActivity(intent)
+        } else {
+            Toast.makeText(requireContext(), "No teacher logged in", Toast.LENGTH_SHORT).show()
         }
-        startActivity(intent)
     }
+
 
     private fun loadClasses() {
-       val database = FirebaseDatabase.getInstance().getReference("Classes")
-
+        val database = FirebaseDatabase.getInstance().getReference("Classes")
         database.orderByChild("uid").equalTo(teacherUid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -107,10 +143,12 @@ class TeacherHomeFragment : Fragment() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(requireContext(), "Failed to load classes.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed to load classes.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
     }
+
 
     private fun deleteClass(classToDelete: Class) {
         val classID = classToDelete.classID
@@ -128,10 +166,18 @@ class TeacherHomeFragment : Fragment() {
                 database.child(classToDelete.classID).removeValue()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(requireContext(), "Class deleted successfully.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Class deleted successfully.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             loadClasses()
                         } else {
-                            Toast.makeText(requireContext(), "Failed to delete class.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to delete class.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
             }
@@ -141,7 +187,6 @@ class TeacherHomeFragment : Fragment() {
             .create()
         dialog.show()
     }
-
     private fun showAddClassDialog() {
         val dialogBinding = DialogAddClassBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(requireContext())
@@ -150,22 +195,39 @@ class TeacherHomeFragment : Fragment() {
             .setCancelable(true)
             .create()
 
-        dialogBinding.addClassSaveButton.setOnClickListener {
-            val classID = dialogBinding.classId.text.toString().trim()
-            val className = dialogBinding.className.text.toString().trim()
-            val subjectCode = dialogBinding.subjectCode.text.toString().trim()
-            val day = dialogBinding.classDay.text.toString().trim()
-            val time = dialogBinding.classTime.text.toString().trim()
+    val daysOfWeek = arrayOf("MT", "WTh", "Friday", "Saturday")
+    val dayAdapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, daysOfWeek)
+    dayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+    dialogBinding.classDaySpinner.adapter = dayAdapter
 
-            if (classID.isEmpty() || className.isEmpty() || subjectCode.isEmpty() || day.isEmpty() || time.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_SHORT).show()
-            } else {
-                checkClassIdUniquenessAndSave(classID, className, subjectCode, day, time, dialog)
-            }
+    val classTimes = arrayOf(
+        "8:00 AM - 10:00 AM",
+        "10:00 AM - 12:00 PM",
+        "1:00 PM - 3:00 PM",
+        "3:00 PM - 5:00 PM"
+    )
+    val timeAdapter =
+        ArrayAdapter(requireContext(), R.layout.simple_spinner_item, classTimes)
+    timeAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+    dialogBinding.classTimeSpinner.adapter = timeAdapter
+
+    dialogBinding.addClassSaveButton.setOnClickListener {
+        val classID = dialogBinding.classId.text.toString().trim()
+        val className = dialogBinding.className.text.toString().trim()
+        val subjectCode = dialogBinding.subjectCode.text.toString().trim()
+        val day = dialogBinding.classDaySpinner.selectedItem.toString().trim()
+        val time =
+            dialogBinding.classTimeSpinner.selectedItem.toString().trim()
+
+        if (classID.isEmpty() || className.isEmpty() || subjectCode.isEmpty() || day.isEmpty() || time.isEmpty()) {
+            Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            checkClassIdUniquenessAndSave(classID, className, subjectCode, day, time, dialog)
         }
-
-        dialog.show()
     }
+    dialog.show()
+}
     private fun checkClassIdUniquenessAndSave(
         classID: String,
         className: String,
@@ -226,15 +288,38 @@ class TeacherHomeFragment : Fragment() {
         dialogBinding.classId.setText(classToUpdate.classID)
         dialogBinding.className.setText(classToUpdate.className)
         dialogBinding.subjectCode.setText(classToUpdate.subjectCode)
-        dialogBinding.classDay.setText(classToUpdate.day)
-        dialogBinding.classTime.setText(classToUpdate.time)
+
+        val daysOfWeek = arrayOf("MT", "WTh", "Friday", "Saturday")
+        val dayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, daysOfWeek)
+        dayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        dialogBinding.classDaySpinner.adapter = dayAdapter
+        val timeAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, arrayOf(
+            "8:00 AM - 10:00 AM",
+            "10:00 AM - 12:00 PM",
+            "1:00 PM - 3:00 PM",
+            "3:00 PM - 5:00 PM"
+        ))
+        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        dialogBinding.classTimeSpinner.adapter = timeAdapter
+
+        // Set the current day and time from the class to be updated
+        val dayPosition = daysOfWeek.indexOf(classToUpdate.day)
+        dialogBinding.classDaySpinner.setSelection(if (dayPosition >= 0) dayPosition else 0)
+
+        val timePosition = arrayOf(
+            "8:00 AM - 10:00 AM",
+            "10:00 AM - 12:00 PM",
+            "1:00 PM - 3:00 PM",
+            "3:00 PM - 5:00 PM"
+        ).indexOf(classToUpdate.time)
+        dialogBinding.classTimeSpinner.setSelection(if (timePosition >= 0) timePosition else 0)
 
         dialogBinding.updateClassSave.setOnClickListener {
             val classID = dialogBinding.classId.text.toString().trim()
             val className = dialogBinding.className.text.toString().trim()
             val subjectCode = dialogBinding.subjectCode.text.toString().trim()
-            val day = dialogBinding.classDay.text.toString().trim()
-            val time = dialogBinding.classTime.text.toString().trim()
+            val day = dialogBinding.classDaySpinner.selectedItem.toString().trim()
+            val time = dialogBinding.classTimeSpinner.selectedItem.toString().trim()
 
             if (classID.isEmpty() || className.isEmpty() || subjectCode.isEmpty() || day.isEmpty() || time.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_SHORT).show()
@@ -246,7 +331,6 @@ class TeacherHomeFragment : Fragment() {
 
         dialog.show()
     }
-
     private fun updateClassInDatabase(
         originalClassID: String?,
         classID: String,
@@ -266,59 +350,18 @@ class TeacherHomeFragment : Fragment() {
             day = day,
             time = time
         )
-    
-    val database = FirebaseDatabase.getInstance().getReference("Classes")
-    database.child(validClassID).setValue(classObj).addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-            Toast.makeText(requireContext(), "Class updated successfully!", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Failed to update class. Try again.", Toast.LENGTH_SHORT).show()
-        }
-    }
-}
 
-    private fun showAddStudentDialog() {
-        val dialogBinding = DialogAddStudentBinding.inflate(layoutInflater)
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("ADD STUDENT")
-            .setView(dialogBinding.root)
-            .setCancelable(true)
-            .create()
-
-        dialogBinding.addStudentSaveButton.setOnClickListener {
-            val studentId = dialogBinding.studentId.text.toString().trim()
-            val studentName = dialogBinding.studentName.text.toString().trim()
-            val classId = dialogBinding.studentClassID.text.toString().trim()
-
-            if (studentId.isEmpty() || studentName.isEmpty() || classId.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill out all fields.", Toast.LENGTH_SHORT).show()
-            } else {
-                val studentObj = Student(
-                        uid = teacherUid,
-                        studentId = studentId,
-                        studentName = studentName,
-                        classId = classId
-                )
-                    saveStudentToDatabase(studentObj, dialog)
-            }
-        }
-
-        dialog.show()
-    }
-
-    private fun saveStudentToDatabase(studentObj: Student, dialog: AlertDialog) {
-        val database = FirebaseDatabase.getInstance().getReference("Students")
-        database.child(studentObj.studentId!!).setValue(studentObj).addOnCompleteListener { task ->
+        val database = FirebaseDatabase.getInstance().getReference("Classes")
+        database.child(validClassID).setValue(classObj).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Toast.makeText(requireContext(), "Student added successfully!", Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
+                Toast.makeText(requireContext(), "Class updated successfully!", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "Failed to add student.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to update class. Try again.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-        override fun onDestroyView() {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }

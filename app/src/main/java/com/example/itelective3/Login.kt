@@ -34,6 +34,8 @@ class Login : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+       // binding.viewRoom.text = "Add Room"
+
         firebaseAuth = Firebase.auth
         database = FirebaseDatabase.getInstance().reference
 
@@ -47,7 +49,6 @@ class Login : AppCompatActivity() {
         binding.forgotPass.setOnClickListener {forgotPassword()}
 
     }
-
 
     private fun btnLogin() {
         val email = binding.usernameInput.text.toString()

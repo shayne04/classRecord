@@ -18,6 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear2"
         android:layout_width="match_parent"
@@ -27,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/logo_image">
 
         <EditText
-            android:layout_width="350dp"
+            android:layout_width="330dp"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:hint="Username/Email"
@@ -51,7 +52,7 @@
             app:hintEnabled="false">
 
         <EditText
-            android:layout_width="350dp"
+            android:layout_width="330dp"
             android:layout_height="50dp"
             android:layout_marginTop="15dp"
             android:hint="Password"
@@ -82,7 +83,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginButton"
-            android:layout_width="350dp"
+            android:layout_width="330dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/layout"
@@ -94,6 +95,7 @@
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/haveAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -123,6 +125,9 @@
             android:textSize="15sp"
             android:layout_marginStart="-20dp"/>
 
+
     </androidx.appcompat.widget.LinearLayoutCompat>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

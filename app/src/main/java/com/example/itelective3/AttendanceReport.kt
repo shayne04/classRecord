@@ -40,12 +40,7 @@ class AttendanceReport : AppCompatActivity() {
 
         binding.spinnerClassSelection.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                     val selectedClass = parent.getItemAtPosition(position).toString()
                     loadAttendanceDataForClass(selectedClass)
                 }
